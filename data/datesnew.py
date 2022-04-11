@@ -16,7 +16,19 @@ def whatdayofmonth(day, month, year):
     daysoftheweek = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela']
     firstday = monthrange(year, month)[0]
     dayofweek = (firstday + day) % 7 - 1
-    return daysoftheweek[dayofweek]
+    if month in [1, 3, 5, 7, 8, 10, 12] and day in range(1, 32):
+        return daysoftheweek[dayofweek]
+    elif month in [4, 6, 9, 11] and day in range(1, 31):
+        return daysoftheweek[dayofweek]
+    elif month == 2:
+        if isleapyear(year) and day in range(1, 30):
+            return daysoftheweek[dayofweek]
+        elif not isleapyear(year) and day in range(1, 29):
+            return daysoftheweek[dayofweek]
+        else:
+            return ("No such day")
+    else:
+        return ("No such day")
 
 def howmanydays(month, year):
     if month in [1, 3, 5, 7, 8, 10, 12]:
@@ -28,17 +40,19 @@ def howmanydays(month, year):
             return 29
         else:
             return 28
+    else:
+        return ("There is no such month")
 
     # 1. Predefined date
-#date = "1-2-2016"
+date = "13-2000"
 
     #2. Date provided by user
 #date = input("Please input date")
 
     # 3. Date read from file
-file = open('plik.txt')
-date = file.read()
-file.close()
+# file = open('plik.txt')
+# date = file.read()
+# file.close()
 
 datelist = re.split('[./\-: ]+', date, 3)
 
@@ -59,5 +73,4 @@ def dates(datelist):
         return whatdayofmonth(day, month, year)
 
 
-print(dates(datelist))
-print(type(dates(datelist)))
+print(whatdayofmonth(31, 4, 2022))
