@@ -44,7 +44,7 @@ def howmanydays(month, year):
         return ("There is no such month")
 
     # 1. Predefined date
-date = "13-2000"
+date = "30-2-2000"
 
     #2. Date provided by user
 #date = input("Please input date")
@@ -72,5 +72,5 @@ def dates(datelist):
         day = int(datelist[-3])
         return whatdayofmonth(day, month, year)
 
-
-print(whatdayofmonth(31, 4, 2022))
+    else:
+        return ("Something went wrong")
