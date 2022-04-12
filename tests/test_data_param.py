@@ -32,6 +32,7 @@ class TestDate(unittest.TestCase):
         (["5", "4", "2022"], "wtorek"),
         (["6", "4", "2022"], "środa"),
         (["7", "4", "2022"], "czwartek"),
+        (["31", "4", "2022"], "No such day"),
         (["8", "4", "2022"], "niedziela")
     ])
     def test_dates_3(self, x, result):
