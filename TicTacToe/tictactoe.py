@@ -79,8 +79,8 @@ def game():
         show_board(board)
         move = make_move(player)
 
+#checking if the value is correct and if the field is taken
 
-        #checking if the value is correct and if the field is taken
         b = 0
         while b != 1:
             if move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
@@ -117,8 +117,9 @@ def game():
             else:
                 b = 1
 
-        insert_on_board(board, move, player)
+#inserting the move on the board
 
+        insert_on_board(board, move, player)
         moves = moves - 1
 
 #checking if a player won
