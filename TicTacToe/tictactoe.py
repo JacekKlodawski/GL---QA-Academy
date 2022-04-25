@@ -1,39 +1,124 @@
 import random
 
-board = [[1,2,3],
-         [4,5,6],
-         [7,8,9]]
-
-
 def show_board(board):
     for row in board:
         print(row)
 
-def check_win():
-    pass
+def check_win(board, player):
+    if board[0][0] == board[0][1] == board[0][2]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[1][0] == board[1][1] == board[1][2]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[2][0] == board[2][1] == board[2][2]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[0][0] == board[1][0] == board[2][0]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[0][1] == board[1][1] == board[2][1]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[0][2] == board[1][2] == board[2][2]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[0][0] == board[1][1] == board[2][2]:
+        print(f'Player {player} wins!')
+        return True
+    elif board[0][2] == board[1][1] == board[2][0]:
+        print(f'Player {player} wins!')
+        return True
 
 def draw_player():
-    player = random.choice('X','O')
+    player = random.choice(['X', 'O'])
     return player
 
-def switch_player(player):
-    if player == 'X':
-        player = 'O'
-    elif player == 'O':
-        player = 'X'
 
-def player_input()
-    plr_input = input(f'Player {player} pick a field from 1 to 9')
+def insert_on_board(board, move, player):
+    if move == "1":
+        board[0][0] = player
+    elif move == "2":
+        board[0][1] = player
+    elif move == "3":
+        board[0][2] = player
+    elif move == "4":
+        board[1][0] = player
+    elif move == "5":
+        board[1][1] = player
+    elif move == "6":
+        board[1][2] = player
+    elif move == "7":
+        board[2][0] = player
+    elif move == "8":
+        board[2][1] = player
+    elif move == "9":
+        board[2][2] = player
+    return board
 
-def check_if_legit_number():
 
+def game():
+    board = [[1, 2, 3],
+             [4, 5, 6],
+             [7, 8, 9]]
+    player = draw_player()
+    moves = 9
 
-player = draw_player()
-moves = 9
+    while moves > 0:
+        show_board(board)
+        move = input(f'Player {player} pick a field from 1 to 9')
 
-while moves > 0:
-    show_board(board)
-    player_input()
-    check_win(board)
-    switch_player(player)
-    moves =- 1
+        #checking if the value is correct and if the field is taken
+        b = 0
+        while b != 1:
+            if move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                print('This is not a proper value, please try again.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+                continue
+            if move == "1" and board[0][0] == 'O' or move == "1" and board[0][0] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "2" and board[0][1] == 'O' or move == "2" and board[0][1] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "3" and board[0][2] == 'O' or move == "3" and board[0][2] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "4" and board[1][0] == 'O' or move == "4" and board[1][0] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "5" and board[1][1] == 'O' or move == "5" and board[1][1] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "6" and board[1][2] == 'O' or move == "6" and board[1][2] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "7" and board[2][0] == 'O' or move == "7" and board[2][0] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "8" and board[2][1] == 'O' or move == "8" and board[2][1] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            elif move == "9" and board[2][2] == 'O' or move == "9" and board[2][2] == 'X':
+                print('This field is taken, please pick a different one.')
+                move = input(f'Player {player} pick a field from 1 to 9')
+            else:
+                b = 1
+
+        insert_on_board(board, move, player)
+
+        if check_win(board, player):
+            show_board(board)
+            break
+
+        if player == 'X':
+            player = 'O'
+        elif player == 'O':
+            player = 'X'
+
+        moves = moves - 1
+
+        if moves == 0:
+            print("Tie!")
+
+game()
