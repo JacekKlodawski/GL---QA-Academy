@@ -77,10 +77,11 @@ def game():
 
     while moves > 0:
         show_board(board)
-#        move = input(f'Player {player} pick a field from 1 to 9')
         move = make_move(player)
-        b = 0
+
+
         #checking if the value is correct and if the field is taken
+        b = 0
         while b != 1:
             if move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 print('This is not a proper value, please try again.')
@@ -117,17 +118,22 @@ def game():
                 b = 1
 
         insert_on_board(board, move, player)
-        #checking if a player won
-        if check_win(board, player):
-            show_board(board)
-
-            break
-        #switching players
-        player = switch_players(player)
 
         moves = moves - 1
 
+#checking if a player won
+
+        if check_win(board, player):
+            show_board(board)
+            print(f'Player {player} wins!')
+            break
+
+#switching players
+
+        player = switch_players(player)
+
         if moves == 0:
+            show_board(board)
             print("Tie!")
 
 game()
