@@ -1,8 +1,10 @@
 import random
 
+
 def show_board(board):
     for row in board:
         print(row)
+
 
 def check_win(board, player):
     if board[0][0] == board[0][1] == board[0][2]:
@@ -30,6 +32,7 @@ def check_win(board, player):
         print(f'Player {player} wins!')
         return True
 
+
 def draw_player():
     player = random.choice(['X', 'O'])
     return player
@@ -38,6 +41,7 @@ def draw_player():
 def make_move(player):
     move = input(f'Player {player} pick a field from 1 to 9')
     return move
+
 
 def switch_players(player):
     if player == 'X':
