@@ -39,7 +39,7 @@ def draw_player():
 
 
 def make_move(player):
-    move = input(f'Player {player} pick a field from 1 to 9')
+    move = input(f'Player {player} pick a field from 1 to 9. Type "s" to show the board.')
     return move
 
 
@@ -87,7 +87,10 @@ def game():
 
         b = 0
         while b != 1:
-            if move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            if move == "s":
+                show_board(board)
+                move = make_move(player)
+            if move not in ['1', '2', '3', '4', '5', '6', '7', '8', '9', 's']:
                 print('This is not a proper value, please try again.')
                 move = make_move(player)
                 continue
