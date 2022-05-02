@@ -6,15 +6,14 @@ products_0VAT = {'fish':2.0, 'meat': 3.0, 'carrot':1.5, 'tomatoe':1.2}
 products_5VAT = {'book': 5.0, 'magazine':3.0, 'towel':2.5}
 products_8VAT = {'chips':2.1, 'water':1.0, 'mustard':1.7}
 products_23VAT = {'table':24.0, 'chair':18.0, 'tv':36.0}
-cart = {}
 
 
 def show_products():
-# adding products lists
+    # adding products lists
     products = {**products_0VAT, **products_5VAT, **products_8VAT, **products_23VAT}
 # different way -> products = products_0VAT | products_5VAT | products_8VAT | products_23VAT
     for key, value in products.items():
-        print('Product: ', key, '|Price: ', value)
+        print('Product: ', key, '| Price: ', value)
     return products
 
 
@@ -78,6 +77,7 @@ def show_amount_to_pay(cart):
         else:
             total += products_0VAT[key] * cart[key]
     print(round(total, 2))
+    return total
 
 
 def add_to_cart(cart):
@@ -108,8 +108,10 @@ def remove_from_cart(cart):
 
 
 def main():
+    cart = {}
     while True:
         navigate(cart)
         break
+
 
 main()
