@@ -2,6 +2,7 @@ import random
 
 
 def show_board(board):
+    print('')
     for row in board:
         print(row)
 
@@ -85,8 +86,7 @@ def game():
 
 #checking if the value is correct and if the field is taken
 
-        b = 0
-        while b != 1:
+        while True:
             if move == "s":
                 show_board(board)
                 move = make_move(player)
@@ -122,7 +122,7 @@ def game():
                 print('This field is taken, please pick a different one.')
                 move = make_move(player)
             else:
-                b = 1
+                break
 
 #inserting the move on the board
 
@@ -137,11 +137,10 @@ def game():
             break
 
 #switching players
-
         player = switch_players(player)
+
 
         if moves == 0:
             show_board(board)
             print("Tie!")
 
-game()
