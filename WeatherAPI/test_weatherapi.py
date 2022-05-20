@@ -127,7 +127,7 @@ class TestWeatherApi(unittest.TestCase):
         self.assertTrue(parse_json['main']['temp'] < 40)
 
     def test_12(self):
-        parameters = {"zip": "EC4Y 9BE,GB",
+        parameters = {"zip": "EC4Y,GB",
                       "appid": "4a646e6cf8b06de0d731287d1da6b670",
                       "units": "metric", "lang": "pl"}
         test_req = requests.get(url, parameters)
@@ -136,3 +136,45 @@ class TestWeatherApi(unittest.TestCase):
         self.assertEqual(test_req.status_code, 200)
         self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'pl')
         self.assertTrue(parse_json['main']['temp'] < 40)
+
+    def test_13(self):
+        parameters = {"q": "London",
+                        "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                        "mode": "html", "lang": "pl", "units": "metric"}
+        test_req = requests.get(url, parameters)
+        soup = str(BeautifulSoup(test_req.content, 'html.parser'))
+        self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
+        self.assertEqual(soup.lower().endswith("</html>"), True)
+        self.assertIn("Londyn", soup)
+        self.assertIn("°C", soup)
+
+    def test_14(self):
+        parameters = {"zip": "EC1A,GB",
+                        "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                        "mode": "html", "lang": "pl", "units": "metric"}
+        test_req = requests.get(url, parameters)
+        soup = str(BeautifulSoup(test_req.content, 'html.parser'))
+        self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
+        self.assertEqual(soup.lower().endswith("</html>"), True)
+        self.assertIn("Londyn", soup)
+        self.assertIn("°C", soup)
+
+    def test_15(self):
+        parameters = {"q": "London",
+                        "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                        "mode": "xml", "lang": "pl", "units": "metric"}
+        test_req = requests.get(url, parameters)
+        self.assertEqual(is_xml(test_req.content), True)
+        dict_data = xmltodict.parse(test_req.content)
+        self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
+        self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'celsius')
+
+    def test_16(self):
+        parameters = {"zip": "EC1A,GB",
+                        "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                        "mode": "xml", "lang": "pl", "units": "metric"}
+        test_req = requests.get(url, parameters)
+        self.assertEqual(is_xml(test_req.content), True)
+        dict_data = xmltodict.parse(test_req.content)
+        self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
+        self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'celsius')
