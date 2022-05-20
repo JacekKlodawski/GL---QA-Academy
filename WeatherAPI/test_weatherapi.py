@@ -67,8 +67,7 @@ class TestWeatherApi(unittest.TestCase):
                         "appid": "4a646e6cf8b06de0d731287d1da6b670",
                         "mode": "xml", "lang": "pl"}
         test_req = requests.get(url, parameters)
-        string_xml = test_req.content
-        self.assertEqual(is_xml(string_xml), True)
+        self.assertEqual(is_xml(test_req.content), True)
         dict_data = xmltodict.parse(test_req.content)
         self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
         self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'kelvin')
@@ -78,8 +77,7 @@ class TestWeatherApi(unittest.TestCase):
                         "appid": "4a646e6cf8b06de0d731287d1da6b670",
                         "mode": "xml", "lang": "pl", "units": "metric"}
         test_req = requests.get(url, parameters)
-        string_xml = test_req.content
-        self.assertEqual(is_xml(string_xml), True)
+        self.assertEqual(is_xml(test_req.content), True)
         dict_data = xmltodict.parse(test_req.content)
         self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
         self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'celsius')
