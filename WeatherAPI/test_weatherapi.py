@@ -151,13 +151,12 @@ class TestWeatherApi(unittest.TestCase):
     def test_14(self):
         parameters = {"zip": "EC1A,GB",
                         "appid": "4a646e6cf8b06de0d731287d1da6b670",
-                        "mode": "html", "lang": "pl", "units": "metric"}
+                        "mode": "html"}
         test_req = requests.get(url, parameters)
         soup = str(BeautifulSoup(test_req.content, 'html.parser'))
         self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
         self.assertEqual(soup.lower().endswith("</html>"), True)
-        self.assertIn("Londyn", soup)
-        self.assertIn("°C", soup)
+
 
     def test_15(self):
         parameters = {"q": "London",
