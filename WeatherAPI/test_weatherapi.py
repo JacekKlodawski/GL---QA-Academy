@@ -6,6 +6,7 @@ import xml.etree.ElementTree as et
 import xml
 import xmltodict
 from bs4 import BeautifulSoup
+from langdetect import detect
 
 
 url = 'https://api.openweathermap.org/data/2.5/weather?'
@@ -19,7 +20,7 @@ class TestWeatherApi(unittest.TestCase):
         parse_json = json.loads(test_req.text)
         self.assertEqual(is_json(test_req.text), True)
         self.assertEqual(test_req.status_code, 200)
-        self.assertEqual(parse_json['name'], 'London')
+        self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'en')
         self.assertTrue(parse_json['main']['temp'] > 200)
 
     def test_2(self):
@@ -36,7 +37,7 @@ class TestWeatherApi(unittest.TestCase):
         parse_json = json.loads(test_req.text)
         self.assertEqual(is_json(test_req.text), True)
         self.assertEqual(test_req.status_code, 200)
-        self.assertEqual(parse_json['name'], 'Londyn')
+        self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'pl')
         self.assertTrue(parse_json['main']['temp'] < 40)
 
     def test_4(self):
@@ -47,7 +48,7 @@ class TestWeatherApi(unittest.TestCase):
         parse_json = json.loads(test_req.text)
         self.assertEqual(is_json(test_req.text), True)
         self.assertEqual(test_req.status_code, 200)
-        self.assertEqual(parse_json['name'], 'London')
+        self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'en')
         self.assertTrue(parse_json['main']['temp'] > 200)
 
     def test_5(self):
@@ -58,19 +59,19 @@ class TestWeatherApi(unittest.TestCase):
         parse_json = json.loads(test_req.text)
         self.assertEqual(is_json(test_req.text), True)
         self.assertEqual(test_req.status_code, 200)
-        self.assertEqual(parse_json['name'], 'London')
+        self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'en')
         self.assertTrue(parse_json['main']['temp'] > 35)
 
     def test_6(self):
         parameters = {"lat": 51.509865, "lon": -0.118092,
                         "appid": "4a646e6cf8b06de0d731287d1da6b670",
-                        "mode": "xml"}
+                        "mode": "xml", "lang": "pl"}
         test_req = requests.get(url, parameters)
         string_xml = test_req.content
         self.assertEqual(is_xml(string_xml), True)
         dict_data = xmltodict.parse(test_req.content)
-        self.assertEqual(dict_data["current"]["city"]['@name'], 'London')
-        self.assertTrue(float(dict_data["current"]["temperature"]['@value']) > 200)
+        self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
+        self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'kelvin')
 
     def test_7(self):
         parameters = {"lat": 51.509865, "lon": -0.118092,
@@ -80,8 +81,8 @@ class TestWeatherApi(unittest.TestCase):
         string_xml = test_req.content
         self.assertEqual(is_xml(string_xml), True)
         dict_data = xmltodict.parse(test_req.content)
-        self.assertEqual(dict_data["current"]["city"]['@name'], 'Londyn')
-        self.assertTrue(float(dict_data["current"]["temperature"]['@value']) < 200)
+        self.assertEqual(detect(dict_data["current"]["clouds"]['@name']), 'pl')
+        self.assertEqual(dict_data["current"]["temperature"]['@unit'], 'celsius')
 
     def test_8(self):
         parameters = {"lat": 51.509865, "lon": -0.118092,
@@ -89,8 +90,8 @@ class TestWeatherApi(unittest.TestCase):
                         "mode": "html"}
         test_req = requests.get(url, parameters)
         soup = str(BeautifulSoup(test_req.content, 'html.parser'))
-        self.assertEquals(soup.lower().startswith("<!doctype html>"), True)
-        self.assertEquals(soup.lower().endswith("</html>"), True)
+        self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
+        self.assertEqual(soup.lower().endswith("</html>"), True)
         self.assertIn("London", soup)
         self.assertIn("°C", soup)
 
@@ -100,8 +101,8 @@ class TestWeatherApi(unittest.TestCase):
                         "mode": "html", "lang": "pl", "units": "metric"}
         test_req = requests.get(url, parameters)
         soup = str(BeautifulSoup(test_req.content, 'html.parser'))
-        self.assertEquals(soup.lower().startswith("<!doctype html>"), True)
-        self.assertEquals(soup.lower().endswith("</html>"), True)
+        self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
+        self.assertEqual(soup.lower().endswith("</html>"), True)
         self.assertIn("Londyn", soup)
         self.assertIn("°C", soup)
 
@@ -111,10 +112,29 @@ class TestWeatherApi(unittest.TestCase):
                         "mode": "html", "lang": "pl", "units": "imperial"}
         test_req = requests.get(url, parameters)
         soup = str(BeautifulSoup(test_req.content, 'html.parser'))
-        self.assertEquals(soup.lower().startswith("<!doctype html>"), True)
-        self.assertEquals(soup.lower().endswith("</html>"), True)
+        self.assertEqual(soup.lower().startswith("<!doctype html>"), True)
+        self.assertEqual(soup.lower().endswith("</html>"), True)
         self.assertIn("Londyn", soup)
         self.assertIn("°F", soup)
 
+    def test_11(self):
+        parameters = {"q": "London",
+                      "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                      "units": "metric", "lang": "pl"}
+        test_req = requests.get(url, parameters)
+        parse_json = json.loads(test_req.text)
+        self.assertEqual(is_json(test_req.text), True)
+        self.assertEqual(test_req.status_code, 200)
+        self.assertEqual(parse_json['name'], 'Londyn')
+        self.assertTrue(parse_json['main']['temp'] < 40)
 
-
+    def test_12(self):
+        parameters = {"zip": "EC4Y 9BE,GB",
+                      "appid": "4a646e6cf8b06de0d731287d1da6b670",
+                      "units": "metric", "lang": "pl"}
+        test_req = requests.get(url, parameters)
+        parse_json = json.loads(test_req.text)
+        self.assertEqual(is_json(test_req.text), True)
+        self.assertEqual(test_req.status_code, 200)
+        self.assertEqual(detect(json.loads(test_req.text)["weather"][0]['description']), 'pl')
+        self.assertTrue(parse_json['main']['temp'] < 40)
